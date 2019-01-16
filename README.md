@@ -5,9 +5,9 @@
 ## Usage
 
 ### Get build number
-**Endpoint:** [GET] - `/version/[app]`    
-**Example:** `/version/example-app`
+**Endpoint:** [GET] - `/builder/[app]`    
+**Example:** `https://version-builder.herokuapp.com/builder/example-app`
 
 ### Increment build number
-**Endpoint:** [GET] - `/version/[app]/next`    
-**Example:** `/version/example-app/next`
+**Endpoint:** [GET] - `/builder/[app]/next`    
+**Example:** `https://version-builder.herokuapp.com/builder/example-app/next`

@@ -1,8 +1,9 @@
 import { get } from 'server/router';
 import ctrl from './controller';
+import pkg from '../package';
 
 export default [
-  get('/version/:app', ctrl.getVersion),
-  get('/version/:app/next', ctrl.nextVersion),
-  get('*', (ctx) => 'Version builder'),
+  get('/builder/:app', ctrl.getVersion),
+  get('/builder/:app/next', ctrl.nextVersion),
+  get('*', (ctx) => `Version Builder - ${pkg.version}`),
 ];

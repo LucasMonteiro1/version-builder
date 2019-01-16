@@ -1,6 +1,6 @@
 {
   "name": "version-builder",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Do not repeat build number",
   "main": "./dist/index.js",
   "scripts": {
