@@ -1,29 +1,28 @@
-import { getCollection } from './database';
+import { query } from './database';
 
-const collection = getCollection('apps');
-
-const getVersion = (ctx) => {
+const getVersion = async (ctx) => {
   const { app } = ctx.params;
 
-  return new Promise((resolve, reject) => {
-    collection.findOne({ app }, (err, doc) => {
-      if (err) return reject(err);
-
-      resolve((doc) && (doc.version) ? String(doc.version) : '1');
-    });
-  });
+  const rows = await query(`
+    SELECT version 
+    FROM apps 
+    WHERE app = $1
+  `, [app]);
+  const result = rows[0] || { version: 1 };
+  return String(result.version);
 };
 
-const nextVersion = (ctx) => {
+const nextVersion = async (ctx) => {
   const { app } = ctx.params;
 
-  return new Promise((resolve, reject) => {
-    collection.update({ app }, { $inc: { version: 1 } }, { upsert: true }, (err, result) => {
-      if (err) return reject(err);
-      
-      resolve(true);
-    });
-  });
+  const rows = await query(`
+    INSERT INTO apps(app, version)
+    VALUES($1, 1)
+    ON CONFLICT (app)
+    DO UPDATE SET version = apps.version + 1
+    RETURNING *
+  `, [app]);
+  return rows[0];
 };
 
 export default {

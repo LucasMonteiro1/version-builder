@@ -1,13 +1,26 @@
-import mongojs from 'mongojs';
+import { Client } from 'pg';
 
-const { MONGODB_URI } = process.env;
+const { DATABASE_URL } = process.env;
 
-export const getCollection = (colection) => {
-  return getDB().collection(colection);
+const getClient = () => {
+  return new Client({ 
+    connectionString: DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false,
+    }
+  });
 };
 
-const getDB = () => {
-  const db = mongojs(MONGODB_URI);
-  db.on('error', (err) => null);
-  return db;
+export const query = async (text, values) => {
+  const client = getClient();
+
+  try {
+    await client.connect();
+    const res = await client.query(text, values);
+    return res.rows;
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await client.end();
+  }
 };
